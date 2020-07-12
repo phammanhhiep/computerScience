@@ -5,7 +5,7 @@ import pytest
 from graphs.breadthFirstSearch import bfs, create_nodes, shortest_path
 
 @pytest.mark.skip
-def test_bfs (g):
+def test_bfs ():
 	s,r,v,w,t,x,u,y = create_nodes (8)
 	s.connect (r)
 	s.connect (w)
