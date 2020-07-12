@@ -1,21 +1,27 @@
-import introAlgorithms.queue as queueLib
+import logging
+
+import elementaryDataStructures_10.queue as queueLib
+
+
+logging.basicConfig(filename='log/stack.log',level=logging.DEBUG)
 
 
 class Stack:
     def __init__(self, n=10):
         self.top = -1
         self.n = n
-        self.array = []
+        self.array = [None for i in range(n)]
 
-    def push(self):
-        if len(self.array) < n:
-            self.top += 1
+    def push(self, obj):
+        self.top += 1
+        if self.top <= self.n-1:
+            self.array[self.top] = obj
         else:
             raise Exception("Stack overflow")
             
 
     def pop(self):
-        if len(self.array) >= 0:
+        if self.top >= 0:
             self.top -= 1
         else:
             raise Exception("Stack underflow")
@@ -40,4 +46,6 @@ class Stack2:
 
 
     def pop(self):
-        # call dequeue from self.q1
+        '''
+        call dequeue from self.q1
+        '''
