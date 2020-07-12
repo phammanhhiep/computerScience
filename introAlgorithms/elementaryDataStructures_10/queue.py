@@ -9,14 +9,14 @@ class Queue:
     def dequeue(self):
         if self.head < 0:
             raise Exception("Queue underflows")
-        else if self.head < self.n - 1
+        elif self.head < self.n - 1:
             self.head += 1
-        elif self.head == self.n - 1
+        elif self.head == self.n - 1:
             self.head = 0
 
 
     def enqueue(self, i):
-        if self.head = self.tail + 1 or (self.tail == self.n-1 and self.head == 0):
+        if self.head == self.tail + 1 or (self.tail == self.n-1 and self.head == 0):
             raise Exception("Queue overflows")
         if self.tail < self.head or (self.tail > self.head and self.tail < self.n-1):
             self.tail += 1
