@@ -74,6 +74,29 @@ class BinarySearchTree:
         return a
 
 
+    def insert(self, node, root_node=None):
+        """
+        Recursive version.
+        """
+        if root_node is None:
+            root_node = self.root_node
+        if self.root_node is None:
+            self.root_node = node
+        else:
+            has_left = root_node.has_left()
+            has_right = root_node.has_right()
+            if root_node.key > node.key and not has_left:
+                root_node.set_relative(1, node)
+                node.set_relative(3, root_node)
+            elif root_node.key > node.key and has_left:
+                self.insert(node, root_node.get_left())
+            elif root_node.key <= node.key and not has_right:
+                root_node.set_relative(1, node)
+                node.set_relative(3, root_node)
+            elif root_node.key <= node.key and has_right:
+                self.insert(node, root_node.get_right())
+
+
     def postorder_tree_walk(root_node): pass
         # Nonrecursive version
 
