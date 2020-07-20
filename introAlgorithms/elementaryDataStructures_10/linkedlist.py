@@ -19,6 +19,18 @@ class Node():
             self.parent = obj
 
 
+    def set_left(self, obj):
+        self.left = obj
+
+
+    def set_right(self, obj):
+        self.right = obj
+
+
+    def set_parent(self, obj):
+        self.parent = obj
+
+
     def rm_relative(self, id):
         if id == 1: 
             self.left = None
@@ -26,6 +38,18 @@ class Node():
             self.right = None
         else:
             self.parent = None    
+
+
+    def rm_left(self):
+        self.left = None
+
+
+    def rm_right(self):
+        self.right = None
+
+
+    def rm_parent(self):
+        self.parent = None
 
 
     def has_right(self):
