@@ -3,7 +3,7 @@ import logging
 import elementaryDataStructures_10.queue as queueLib
 
 
-logging.basicConfig(filename='log/stack.log',level=logging.DEBUG)
+logging.basicConfig(filename='stack.log',level=logging.DEBUG)
 
 
 class Stack:
