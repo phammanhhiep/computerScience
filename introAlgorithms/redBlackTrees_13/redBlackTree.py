@@ -1,18 +1,18 @@
 import logging
 
-from elementaryDataStructure_10.linkedlist import Node
+from elementaryDataStructures_10.linkedlist import Node as OriginalNode
 from binarySearchTrees_12.binarySearchTree import BinarySearchTree
 
 
 logging.basicConfig(filename="redBlackTree.log", level=logging.DEBUG)
 
 
-class Node2(Node):
+class Node(OriginalNode):
 	"""
 	Color: 1 for red and 2 for black.
 	"""
 	def __init__(self, key=None, color=None, left=None, right=None, parent=None):
-		Node.__init__(self, key, left, right, parent)
+		OriginalNode.__init__(self, key, left, right, parent)
 		self.BLACK = 1
 		self.RED = 2		
 		self.color = color
@@ -36,22 +36,56 @@ class RedBlackTree(BinarySearchTree):
 
 	def right_rotate(self, node):
 		if not node.has_left():
-			logging.warning("Node has no left child")
-		left = node.get_left()
+			logging.error("Node has no left child")
+			raise ValueError()
 
-		left.set_relative(node.get_parent(), 3)
+		left = node.get_left()
 
 		if not node.has_parent():
 			self.root_node = left
 		elif node.get_parent().has_left() and node.get_parent().get_left().get_key() == node.get_key():
-			node.get_parent().set_relative(left, 1)
+			node.get_parent().set_left(left)
 		else:
-			node.get_parent().set_relative(left, 2)
+			node.get_parent().set_right(left)
 		
-		node.set_relative(left, 2)
-		node.set_relative(left.get_right(), 1)
-		left.set_relative(node, 2)
+		node.set_left(left.get_right())
+		node.set_parent(left)
+		left.set_right(node)
+
+		if node.has_left():
+			node.get_left().set_parent(node) 
 
 
 	def left_rotate(self, node):
-		pass
+		if not node.has_right():
+			logging.error("Node has no right child")
+			raise ValueError()
+
+		right = node.get_right()
+
+		if not node.has_parent():
+			self.root_node = right
+		elif node.get_parent().has_left() and node.get_parent().get_left().get_key() == node.get_key():
+			node.get_parent().set_left(right)
+		else:
+			node.get_parent().set_right(right)
+		
+		node.set_right(right.get_left())
+		node.set_parent(right)
+		right.set_left(node)
+
+		if node.has_right():
+			node.get_right().set_parent(node) 
+
+
+	def insert(self): pass
+
+
+	def insert_fixup(self): pass
+
+
+	def delete(self): pass
+
+
+	def delete_fixup(self): pass
+
