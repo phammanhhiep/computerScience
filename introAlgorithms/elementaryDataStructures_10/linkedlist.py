@@ -88,29 +88,35 @@ class Node():
         return self.parent
 
 
-    def is_left(self, x):
+    def has_left_as(self, x):
         """
         Check if node x is the left child of the object
         """
-        if self.has_left() and (self.get_left().get_key() == x.get_key()):
+        if self.has_left() and (self.get_left().equal_to(x)):
             return True
         else:
             return False
 
 
-    def is_right(self, x):
-        if self.has_right() and (self.get_right().get_key() == x.get_key()):
+    def has_right_as(self, x):
+        if self.has_right() and (self.get_right().equal_to(x)):
             return True
         else:
             return False
 
 
-    def is_parent(self, x):
-        if self.has_parent() and (self.get_parent().get_key() == x.get_key()):
+    def has_parent_as(self, x):
+        if self.has_parent() and (self.get_parent().equal_to(x)):
             return True
         else:
             return False
 
+
+    def equal_to(self, x):
+        if self.get_key() == x.get_key():
+            return True
+        else:
+            return False
 
 
 class DoublyList:
