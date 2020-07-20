@@ -1,4 +1,4 @@
-import os, sys, math, logging
+import logging
 
 from elementaryDataStructures_10 import stack, linkedlist
 
@@ -7,7 +7,7 @@ logging.basicConfig(filename="binarySearchTree.log", level=logging.DEBUG)
 
 
 class BinarySearchTree:
-    def __init__(self, root_node):
+    def __init__(self, root_node=None):
         """
         Assume the tree has the binary-search-tree property at the beginning. 
         """
