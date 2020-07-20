@@ -1,9 +1,13 @@
 class Node():
-    def __init__(self, key, left=None, right=None, parent=None):
+    def __init__(self, key=None, left=None, right=None, parent=None):
         self.key = key
         self.left = left
         self.right = right
         self.parent = parent
+
+
+    def set_key(self, key):
+        self.key = key
 
 
     def set_relative(self, id, obj):
@@ -43,7 +47,7 @@ class Node():
         else: 
             return False        
 
-
+            
     def get_key(self):
         return self.key
 
