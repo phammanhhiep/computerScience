@@ -153,63 +153,61 @@ class RedBlackTree(BinarySearchTree):
         pass
 
 
-    # def delete_fixup(self, x):
-    #     while not x.equal_to(self.root_node) and x.is_black():
-    #         xp =  x.get_parent()
-    #         if xp.has_left_as(x):
-    #             logging.debug("Node({}) is the left child".format(x.get_key()))
-    #             w = xp.get_right()
-    #             if not w.is_black():
-    #                 logging.debug("Case 1: right child of parent of Node({}) is red"
-    #                     .format(x.get_key()))
-    #                 w.set_black()
-    #                 xp.set_red()
-    #                 self.left_rotate(xp)
-    #                 w = xp.get_right()
-    #             if w.get_left().is_black() and w.get_right().is_black():
-    #                 logging.debug("Case 2: The left and right children of the sibling of Node({}) are black".format(x.get_key()))
-    #                 w.set_red()
-    #                 x = x.get_parent()
-    #             elif w.get_right().is_black():
-    #                 logging.debug("Case 3: The right children of the sibling of Node({}) is black, but not the left child".format(x.get_key()))
-    #                 w.get_left().set_black()
-    #                 w.set_red()
-    #                 self.right_rotate(w)
-    #                 w = xp.get_right()
-    #             else:
-    #                 logging.debug("Case 4: The right children of the sibling of Node({}) is red".format(x.get_key()))     
-    #                 w.set_color(xp.get_color())
-    #                 xp.set_black()
-    #                 w.get_right().set_black()
-    #                 self.left_rotate(xp)
-    #                 x = self.root_node              
-    #         else:
-    #             logging.debug("Node({}) is the right child".format(x.get_key()))
-    #             w = xp.get_left()
-    #             if not w.is_black():
-    #                 logging.debug("Case 1: left child of parent of Node({}) is red".format(x.get_key()))
-    #                 w.set_black()
-    #                 xp.set_red()
-    #                 self.right_rotate(xp)
-    #                 w = xp.get_left()
-    #             if w.get_left().is_black() and w.get_right().is_black():
-    #                 logging.debug("Case 2: The left and right children of the sibling of Node({}) are black".format(x.get_key()))
-    #                 w.set_red()
-    #                 x = x.get_parent()
-    #             elif w.get_right().is_black():
-    #                 logging.debug("Case 3: The right children of the sibling of Node({}) \
-    #                     is black, but not the left child".format(x.get_key()))
-    #                 w.get_left().set_black()
-    #                 w.set_red()
-    #                 self.right_rotate(w)
-    #                 w = xp.get_right()
-    #             else:
-    #                 logging.debug("Case 4: The right children of the sibling of Node({}) \
-    #                     is red".format(x.get_key()))     
-    #                 w.set_color(xp.get_color())
-    #                 xp.set_black()
-    #                 w.get_right().set_black()
-    #                 self.left_rotate(xp)
-    #                 x = self.root_node                  
-    #     x.set_black()
+    def delete_fixup(self, x):
+        while not x.equal_to(self.root_node) and x.is_black():
+            xp =  x.get_parent()
+            if xp.has_left_as(x):
+                logging.debug("Node({}) is the left child".format(x.get_key()))
+                w = xp.get_right()
+                if not w.is_black():
+                    logging.debug("Case 1: The sibling of the Node({}) is red"
+                        .format(x.get_key()))
+                    w.set_black()
+                    xp.set_red()
+                    self.left_rotate(xp)
+                    w = xp.get_right()
+                if w.get_left().is_black() and w.get_right().is_black():
+                    logging.debug("Case 2: The left and right children of the sibling of the Node({}) are black".format(x.get_key()))
+                    w.set_red()
+                    x = x.get_parent()
+                elif w.get_right().is_black():
+                    logging.debug("Case 3: The right children of the sibling of the Node({}) is black, but not the left child".format(x.get_key()))
+                    w.get_left().set_black()
+                    w.set_red()
+                    self.right_rotate(w)
+                    w = xp.get_right()
+                else:
+                    logging.debug("Case 4: The right children of the sibling of the Node({}) is red".format(x.get_key()))     
+                    w.set_color(xp.get_color())
+                    xp.set_black()
+                    w.get_right().set_black()
+                    self.left_rotate(xp)
+                    x = self.root_node              
+            else:
+                logging.debug("Node({}) is the right child".format(x.get_key()))
+                w = xp.get_left()
+                if not w.is_black():
+                    logging.debug("Case 1: the sibling of the parent of the Node({}) is red".format(x.get_key()))
+                    w.set_black()
+                    xp.set_red()
+                    self.right_rotate(xp)
+                    w = xp.get_left()
+                if w.get_left().is_black() and w.get_right().is_black():
+                    logging.debug("Case 2: The left and right children of the sibling of the Node({}) are black".format(x.get_key()))
+                    w.set_red()
+                    x = x.get_parent()
+                elif not w.get_right().is_black():
+                    logging.debug("Case 3: The right children of the sibling of Node({}) is red".format(x.get_key()))
+                    w.get_right().set_black()
+                    w.set_red()
+                    self.left_rotate(w)
+                    w = xp.get_right()
+                else:
+                    logging.debug("Case 4: The right child is black of the sibling of Node({})".format(x.get_key()))     
+                    w.set_color(xp.get_color())
+                    xp.set_black()
+                    w.get_left().set_black()
+                    self.right_rotate(xp)
+                    x = self.root_node                  
+        x.set_black()
 
