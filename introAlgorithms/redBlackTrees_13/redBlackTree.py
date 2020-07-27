@@ -42,6 +42,28 @@ class NilNode(OriginalNode):
         return True
 
 
+    def isNil(self):
+        if self.is_black() and self.get_key() is None:
+            return True
+        elif self.is_black() and self.get_key() is not None:
+            return False
+        else:
+            logging.error("Nondetermined node")
+            raise ValueError()
+
+
+    def equal_to(self, x):
+        if x.is_nil() and self.is_nil():
+            return True
+        elif not x.is_nill() and not self.is_nil():
+            if self.get_key() == x.get_key():
+                return True
+            else:
+                return False
+        else:
+            False         
+
+
 class Node(NilNode):
     """
     Color: 1 for red and 2 for black.
@@ -85,13 +107,20 @@ class Node(NilNode):
         if self.get_parent().get_key() is not None:
             return True
         else:
-            return False            
+            return False       
+
 
 class RedBlackTree(BinarySearchTree):
-    """
+    """[summary]
+    
     Assuming keys are distinct.
+    
+    Extends:
+        BinarySearchTree
     """
     def __init__(self, root_node=None):
+        if root_node is None:
+            root_node = NilNode()
         BinarySearchTree.__init__(self, root_node)
         if root_node is not None:
             root_node.set_black()
@@ -143,14 +172,68 @@ class RedBlackTree(BinarySearchTree):
             node.get_right().set_parent(node) 
 
 
+    def transplant(self, u, v):
+        """Replace node u by node v, but not handle the positions of children of v
+        
+        [description]
+        
+        Arguments:
+            u {[type]} -- [description]
+            v {[type]} -- [description]
+        """
+        parent = u.get_parent()
+
+        if not u.has_parent():
+            self.root_node = u
+        elif parent.has_right_as(u):
+            parent.set_right(v)
+        else:
+            parent.set_left(v)
+
+        v.set_parent(parent)
+
+
     def insert(self): pass
 
 
     def insert_fixup(self): pass
 
 
-    def delete(self):
-        pass
+    def delete(self, z):
+        """Delete node z from the tree.
+        
+        [description]
+        
+        Arguments:
+            z {[type]} -- [description]
+        """
+        y = z
+        y_original_color = y.get_color()
+
+        if not z.has_left():
+            x = z.get_right()
+            self.transplant(z, x)
+        elif not z.has_right():
+            x = z.get_left()
+            self.transplant(z, x)
+        else:
+            y = self.get_minimum(z.get_right())
+            y_original_color = y.get_color()
+            x = y.get_right()
+            if y.has_parent_as(z):
+                x.set_parent(y)
+            else:
+                self.transplant(y, x)
+                y.set_right(z.get_right())
+                y.get_right().set_parent(y)
+            self.transplant(z, y)
+            y.set_left(z.get_left())
+            y.get_left().set_parent(y)
+            y.set_color(z.get_color())
+
+        if self.root_node.BLACK == y_original_color:
+            self.delete_fixup(x)
+
 
 
     def delete_fixup(self, x):
