@@ -43,9 +43,10 @@ class NilNode(OriginalNode):
 
 
     def is_nil(self):
+        logging.debug("Check if node({}) is NIL".format(self.get_key()))
         if self.is_black() and self.get_key() is None:
             return True
-        elif self.is_black() and self.get_key() is not None:
+        elif self.get_key() is not None:
             return False
         else:
             logging.error("Nondetermined node")
