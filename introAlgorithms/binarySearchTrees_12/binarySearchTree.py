@@ -33,7 +33,9 @@ class BinarySearchTree:
         return p
 
 
-    def get_minimum(self, node):
+    def get_minimum(self, node=None):
+        if node is None:
+            node = self.root_node
         while node.has_left():
             node = node.get_left()
         return node
