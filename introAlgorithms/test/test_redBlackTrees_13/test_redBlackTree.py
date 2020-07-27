@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from redBlackTrees_13.redBlackTree import RedBlackTree, Node
+from redBlackTrees_13.redBlackTree import RedBlackTree, Node, NilNode
 
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
@@ -33,7 +33,7 @@ def aTree():
 
 
 @pytest.mark.skip
-def test_right_rotate(aTree):
+def test_RedBlackTree_right_rotate(aTree):
 	rb = RedBlackTree(aTree[5])
 	node = aTree[3]
 	parent = node.get_parent()
@@ -48,7 +48,7 @@ def test_right_rotate(aTree):
 
 
 @pytest.mark.skip
-def test_left_rotate(aTree):
+def test_RedBlackTree_left_rotate(aTree):
 	rb = RedBlackTree(aTree[5])
 	node = aTree[7]
 	parent = node.get_parent()
@@ -63,7 +63,7 @@ def test_left_rotate(aTree):
 
 
 @pytest.mark.skip
-def test_delete_fixup():
+def test_RedBlackTree_delete_fixup():
 	logging.debug("When x is the left child: Test case 1 and case 2")
 	tree = [Node(i) for i in range(10)]
 	root = tree[3]
@@ -102,7 +102,7 @@ def test_delete_fixup():
 
 
 @pytest.mark.skip
-def test_delete_fixup2():
+def test_RedBlackTree_delete_fixup2():
 	logging.debug("When x is the left child: Test case 1, case 3, and 4")
 	tree = [Node(i) for i in range(10)]
 	root = tree[3]
@@ -142,7 +142,7 @@ def test_delete_fixup2():
 
 
 @pytest.mark.skip
-def test_delete_fixup3():
+def test_RedBlackTree_delete_fixup3():
 	logging.debug("When x is the right child: Test case 1 and case 2")
 	tree = [Node(i) for i in range(10)]
 	root = tree[6]
@@ -182,7 +182,7 @@ def test_delete_fixup3():
 
 
 @pytest.mark.skip
-def test_delete_fixup4():
+def test_RedBlackTree_delete_fixup4():
 	logging.debug("When x is the right child: Test case 1, and case 3 and 4")
 	tree = [Node(i) for i in range(10)]
 	root = tree[6]
@@ -219,3 +219,86 @@ def test_delete_fixup4():
 	assert tree[5].has_left_as(tree[3])
 	assert tree[3].is_black()
 	assert tree[7].is_black()
+
+
+@pytest.mark.skip
+def test_RedBlackTree_delete():
+	tree = [Node(i) for i in range(10)]
+	root = tree[6]
+	root.set_right(tree[8])
+	root.set_left(tree[2])
+	tree[2].set_parent(root)
+	tree[8].set_parent(root)
+	tree[2].set_red()
+	tree[8].set_red()
+	tree[8].set_left(tree[7])
+	tree[8].set_right(tree[9])
+	tree[7].set_parent(tree[8])
+	tree[9].set_parent(tree[8])
+	tree[2].set_left(tree[1])
+	tree[1].set_parent(tree[2])
+	tree[2].set_right(tree[5])
+	tree[5].set_parent(tree[2])
+	tree[5].set_left(tree[3])
+	tree[5].set_right(tree[4])
+	tree[3].set_parent(tree[5])
+	tree[4].set_parent(tree[5])
+	tree[4].set_red()	
+	tree[3].set_red()
+
+	rb = RedBlackTree(root)
+	rb.delete(tree[8])
+
+	assert rb.root_node.equal_to(tree[6])
+	assert rb.root_node.has_left_as(tree[2])
+	assert rb.root_node.has_right_as(tree[9])
+	assert tree[9].has_left_as(tree[7])
+	assert not tree[9].has_right()
+	assert tree[9].is_black()
+	assert not tree[7].is_black()
+	assert tree[7].has_parent_as(tree[9])
+
+
+# @pytest.mark.skip
+def test_RedBlackTree_get_minimum():
+
+	logging.info("When the tree is empty")
+	root = NilNode()
+	rb = RedBlackTree(root)
+
+	try:
+		min_node = rb.get_minimum()
+		logging.debug("The function should throw exception, and the message should never appear. Min node: {}".format(min_node.get_key()))
+	except ValueError as e:
+		assert True
+	else:
+		assert False
+
+	logging.info("When tree is not empty and the min node is an internal node")
+	tree = [Node(i) for i in range(10)]
+	root = tree[6]
+	root.set_left(tree[5])
+	tree[5].set_parent(root)
+	rb = RedBlackTree(root)
+	min_node = rb.get_minimum()
+	
+	assert min_node.equal_to(tree[5])
+
+	logging.info("When the tree is not empty, and the min node is an parent whose left child is a NIL and right child is an internal node")
+	tree = [Node(i) for i in range(10)]
+	root = tree[6]
+	root.set_left(tree[4])
+	tree[4].set_parent(root)
+	tree[4].set_right(tree[5])
+	tree[5].set_parent(tree[4])
+	rb = RedBlackTree(root)
+	min_node = rb.get_minimum()
+	
+	assert min_node.equal_to(tree[4])	
+
+
+@pytest.mark.skip
+def test_Node_has_parent():
+	node = NilNode()
+	assert not node.has_parent()
+	assert node.get_key() is None
