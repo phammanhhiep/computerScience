@@ -65,8 +65,12 @@ class NilNode(OriginalNode):
 
 
 class Node(NilNode):
-    """
-    Color: 1 for red and 2 for black.
+    """[summary]
+    
+    Every node has a left and right children. By defaut, they are NilNode.
+    
+    Extends:
+        NilNode
     """
     def __init__(self, key, color=None, left=None, right=None, parent=None):
         NilNode.__init__(self, key, left, right, parent)
@@ -124,6 +128,29 @@ class RedBlackTree(BinarySearchTree):
         BinarySearchTree.__init__(self, root_node)
         if root_node is not None:
             root_node.set_black()
+
+
+    def get_miminum(self, node=None):
+        """[summary]
+        
+        The function assumes,
+        - Either node is not provided or node must be an instance of Node. 
+        - Provided node must always has both left and right children.
+
+        The return node must be an internal nodes, because we choose to order them by their keys.
+        
+        Keyword Arguments:
+            node {[type]} -- [description] (default: {None})
+        """
+        if node is None:
+            node = self.root_node
+        if not node.has_parent() and node.get_key() is None:
+            logging.error("Empty tree is provided")
+            raise ValueError()
+
+        while node.get_key() is not None:
+            node = node.get_left()
+        return node.has_parent():
 
 
     def right_rotate(self, node):
