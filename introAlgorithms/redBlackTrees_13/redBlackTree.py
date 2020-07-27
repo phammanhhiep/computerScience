@@ -42,7 +42,7 @@ class NilNode(OriginalNode):
         return True
 
 
-    def isNil(self):
+    def is_nil(self):
         if self.is_black() and self.get_key() is None:
             return True
         elif self.is_black() and self.get_key() is not None:
@@ -53,9 +53,9 @@ class NilNode(OriginalNode):
 
 
     def equal_to(self, x):
-        if x.is_nil() and self.is_nil():
+        if self.is_nil() and x.is_nil():
             return True
-        elif not x.is_nill() and not self.is_nil():
+        elif not x.is_nil() and not self.is_nil():
             if self.get_key() == x.get_key():
                 return True
             else:
@@ -127,10 +127,11 @@ class RedBlackTree(BinarySearchTree):
             root_node = NilNode()
         BinarySearchTree.__init__(self, root_node)
         if root_node is not None:
+            logging.info("Set the color of root as black")
             root_node.set_black()
 
 
-    def get_miminum(self, node=None):
+    def get_minimum(self, node=None):
         """[summary]
         
         The function assumes,
@@ -144,13 +145,17 @@ class RedBlackTree(BinarySearchTree):
         """
         if node is None:
             node = self.root_node
-        if not node.has_parent() and node.get_key() is None:
+        if not node.has_parent() and (node.get_key() is None):
             logging.error("Empty tree is provided")
-            raise ValueError()
+            raise ValueError
 
+        x = node    
         while node.get_key() is not None:
+            logging.debug("Node({}) is checking".format(node.get_key()))
+            x = node
             node = node.get_left()
-        return node.has_parent():
+        logging.debug("Minimum node ({})".format(x.get_key()))
+        return x
 
 
     def right_rotate(self, node):
