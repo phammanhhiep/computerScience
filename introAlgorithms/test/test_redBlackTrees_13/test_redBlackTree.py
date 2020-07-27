@@ -221,7 +221,7 @@ def test_RedBlackTree_delete_fixup4():
 	assert tree[7].is_black()
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_RedBlackTree_delete():
 	tree = [Node(i) for i in range(10)]
 	root = tree[6]
@@ -259,7 +259,7 @@ def test_RedBlackTree_delete():
 	assert tree[7].has_parent_as(tree[9])
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_RedBlackTree_get_minimum():
 
 	logging.info("When the tree is empty")
