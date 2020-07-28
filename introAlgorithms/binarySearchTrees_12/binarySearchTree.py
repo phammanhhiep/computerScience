@@ -42,7 +42,13 @@ class BinarySearchTree:
 
 
     def inode_tree_walk(self):
-        # Nonrecursive version
+        """Return a list of keys in increasing order
+        
+        The implementation is a nonrecursive version.
+        
+        Returns:
+            [type] -- [description]
+        """
         s = stack.Stack(100)
         a = []
         root_node = self.root_node
