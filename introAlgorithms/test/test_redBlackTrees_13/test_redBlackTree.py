@@ -221,7 +221,7 @@ def test_RedBlackTree_delete_fixup4():
 	assert tree[7].is_black()
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_RedBlackTree_delete():
 	tree = [Node(i) for i in range(10)]
 	root = tree[6]
@@ -298,7 +298,101 @@ def test_RedBlackTree_get_minimum():
 
 
 @pytest.mark.skip
+def test_RedBlackTree_insert_fixup():
+	logging.debug("When parent of the inserted node is left child. Case 1: uncle of the node is red")
+	tree = [Node(i) for i in range(10)]
+	root = tree[6]
+	root.set_left(tree[4])
+	root.set_right(tree[7])
+	tree[4].set_parent(root)
+	tree[7].set_parent(root)
+	tree[7].set_red()
+	tree[4].set_red()
+	tree[4].set_left(tree[3])
+	tree[3].set_parent(tree[4])
+	tree[3].set_red()
+
+	rb = RedBlackTree(root)
+	rb.insert_fixup(tree[3])
+
+	assert rb.root_node.equal_to(tree[6])
+	assert rb.root_node.is_black()
+	assert tree[4].is_black()
+	assert tree[7].is_black()
+
+
+@pytest.mark.skip
+def test_RedBlackTree_insert_fixup2():
+	logging.debug("When parent of the inserted node is left child. Case 2 and case 3")
+	tree = [Node(i) for i in range(10)]
+	root = tree[6]
+	root.set_left(tree[2])
+	root.set_right(tree[7])
+	tree[2].set_parent(root)
+	tree[7].set_parent(root)
+	tree[2].set_red()
+	tree[2].set_left(tree[1])
+	tree[2].set_right(tree[4])
+	tree[4].set_parent(tree[2])
+	tree[4].set_red()
+	tree[4].set_left(tree[3])
+	tree[4].set_right(tree[5])
+
+
+	rb = RedBlackTree(root)
+	rb.insert_fixup(tree[4])
+
+	assert rb.root_node.equal_to(tree[4])
+	assert rb.root_node.is_black()
+	assert rb.root_node.has_left_as(tree[2])
+	assert rb.root_node.has_right_as(tree[6])
+	assert tree[6].has_right_as(tree[7])
+	assert tree[6].has_left_as(tree[5])
+	assert tree[2].is_red()
+	assert tree[6].is_red()
+	assert tree[7].is_black()
+	assert tree[5].is_black()
+
+
+@pytest.mark.skip
+def test_RedBlackTree_insert_fixup3():
+	logging.debug("When parent of the inserted node is right child. Case 2 and Case 3")
+	tree = [Node(i) for i in range(10)]
+	root = tree[2]
+	root.set_left(tree[1])
+	root.set_right(tree[4])
+	tree[6].set_parent(root)
+	tree[1].set_parent(root)
+	tree[6].set_red()
+	tree[6].set_right(tree[7])
+	tree[7].set_parent(tree[6])	
+	tree[6].set_left(tree[4])
+	tree[4].set_parent(tree[6])
+	tree[4].set_red()
+	tree[4].set_left(tree[3])
+	tree[4].set_right(tree[5])
+	tree[5].set_parent(tree[4])
+	tree[3].set_parent(tree[4])	
+
+	rb = RedBlackTree(root)
+	rb.insert_fixup(tree[4])
+
+	assert rb.root_node.equal_to(tree[4])
+	assert rb.root_node.is_black()
+	assert rb.root_node.has_left_as(tree[2])
+	assert rb.root_node.has_right_as(tree[6])
+	assert tree[6].has_right_as(tree[7])
+	assert tree[6].has_left_as(tree[5])
+	assert tree[6].is_red()
+	assert tree[2].is_red()		
+	assert tree[7].is_black()
+	assert tree[5].is_black()
+
+
+@pytest.mark.skip
 def test_Node_has_parent():
 	node = NilNode()
 	assert not node.has_parent()
 	assert node.get_key() is None
+
+
