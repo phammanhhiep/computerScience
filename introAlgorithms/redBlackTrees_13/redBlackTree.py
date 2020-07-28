@@ -95,6 +95,13 @@ class Node(NilNode):
             return True
 
 
+    def is_red(self):
+        if self.is_black():
+            return False
+        else:
+            return True
+
+
     def has_left(self):
         if self.get_left().get_key() is not None:
             return True
@@ -229,7 +236,46 @@ class RedBlackTree(BinarySearchTree):
     def insert(self): pass
 
 
-    def insert_fixup(self): pass
+    def insert_fixup(self, z):
+        while not z.get_parent().is_black():
+            zp = z.get_parent()
+            if zp.get_parent().has_left_as(zp):
+                logging.debug("The parent of node({}) is left child".format(z.get_key()))
+                y = zp.get_parent().get_right()
+                if not y.is_black():
+                    logging.debug("Case 1: If uncle of node({}) is red".format(z.get_key()))
+                    zp.set_black()
+                    y.set_black()
+                    zp.get_parent().set_red()
+                    z = zp.get_parent()
+                elif zp.has_right_as(z):
+                    logging.debug("Case 2: If uncle of node({}) is black and the node is the right child".format(z.get_key()))
+                    z = zp
+                    self.left_rotate(z)
+                else:
+                    logging.debug("Case 3: if uncle of node({}) is black and the node is the left child".format(z.get_key()))
+                    zp.set_black()
+                    zp.get_parent().set_red()
+                    self.right_rotate(zp.get_parent())
+            else:
+                logging.debug("The parent of node({}) is right child".format(z.get_key()))
+                y = zp.get_parent().get_left()
+                if not y.is_black():
+                    logging.debug("Case 1: If uncle of node({}) is red".format(z.get_key()))
+                    zp.set_black()
+                    y.set_black()
+                    zp.get_parent().set_red()
+                    z = zp.get_parent()
+                elif zp.has_left_as(z):
+                    logging.debug("Case 2: If uncle of node({}) is black and the node is the left child".format(z.get_key()))
+                    z = zp
+                    self.right_rotate(z)
+                else:
+                    logging.debug("Case 3: If uncle of node({}) is black and the node is the right child".format(z.get_key()))
+                    zp.set_black()
+                    zp.get_parent().set_red()
+                    self.left_rotate(zp.get_parent())
+        self.root_node.set_black()
 
 
     def delete(self, z):
