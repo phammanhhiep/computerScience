@@ -5,29 +5,18 @@ import pytest
 from redBlackTrees_13.redBlackTree import RedBlackTree, Node, NilNode
 
 
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-
-
 @pytest.fixture
 def aTree():
 	tree = [Node(i) for i in range(10)]
 	root = tree[5]
 	root.set_left(tree[3])
 	root.set_right(tree[7])
-	tree[3].set_parent(root)
 	tree[3].set_left(tree[1])
 	tree[3].set_right(tree[4])
-	tree[1].set_parent(tree[3])
 	tree[1].set_right(tree[2])
-	tree[2].set_parent(tree[1])
-	tree[4].set_parent(tree[3])
-	tree[7].set_parent(root)
 	tree[7].set_left(tree[6])
 	tree[7].set_right(tree[9])
-	tree[6].set_parent(tree[7])
-	tree[9].set_parent(tree[7])
 	tree[9].set_left(tree[8])
-	tree[8].set_parent(tree[9])	
 
 	return tree
 
@@ -360,19 +349,13 @@ def test_RedBlackTree_insert_fixup3():
 	tree = [Node(i) for i in range(10)]
 	root = tree[2]
 	root.set_left(tree[1])
-	root.set_right(tree[4])
-	tree[6].set_parent(root)
-	tree[1].set_parent(root)
+	root.set_right(tree[6])
 	tree[6].set_red()
 	tree[6].set_right(tree[7])
-	tree[7].set_parent(tree[6])	
 	tree[6].set_left(tree[4])
-	tree[4].set_parent(tree[6])
 	tree[4].set_red()
 	tree[4].set_left(tree[3])
 	tree[4].set_right(tree[5])
-	tree[5].set_parent(tree[4])
-	tree[3].set_parent(tree[4])	
 
 	rb = RedBlackTree(root)
 	rb.insert_fixup(tree[4])
@@ -387,6 +370,63 @@ def test_RedBlackTree_insert_fixup3():
 	assert tree[2].is_red()		
 	assert tree[7].is_black()
 	assert tree[5].is_black()
+
+
+@pytest.mark.skip
+def test_RedBlackTree_insert():
+	logging.debug("Insert a node and test insert_fixup case 2 and 3")
+	tree = [Node(i) for i in range(10)]	
+	root = tree[2]
+	root.set_left(tree[1])
+	root.set_right(tree[7])
+	tree[7].set_right(tree[8])
+	tree[7].set_left(tree[5])
+	tree[5].set_right(tree[6])
+	tree[5].set_left(tree[4])
+	tree[4].set_red()
+	tree[6].set_red()
+
+	rb = RedBlackTree(root)
+	keys = rb.inode_tree_walk()
+
+	expected_keys = [1,2,4,5,6]
+	logging.debug("keys: {}".format(keys))
+
+	assert len(expected_keys) == len(keys)
+	for i,j in zip(keys, expected_keys):
+		assert i == j
+
+	rb.insert(tree[3])
+
+	assert rb.root_node.equal_to(tree[5])
+	assert rb.root_node.has_left_as(tree[2])
+	assert rb.root_node.has_left_as(tree[7])
+	assert rb.root_node.is_black() and tree[2].is_red() and tree[7].is_red()
+	assert tree[2].has_left_as(tree[1])
+	assert tree[2].has_right_as(tree[4])
+	assert tree[4].has_left_as(tree[3])
+	assert tree[7].has_left_as(tree[6])
+	assert tree[7].has_right_as(tree[8])
+
+
+# @pytest.mark.skip
+def test_inorder_tree_walk():
+    tree = [Node(i) for i in range(10)]
+    root = tree[5]
+    root.set_left(tree[1])
+    root.set_right(tree[8])
+    tree[2].set_left(tree[1])
+    tree[2].set_right(tree[4])
+    tree[8].set_left(tree[7])
+
+
+    rb = RedBlackTree(root)
+
+    keys = rb.inorder_tree_walk()
+
+    expected_keys = [1,2,4,5,7,8]
+    for i,j in zip(keys, expected_keys):
+        assert i == j
 
 
 @pytest.mark.skip
