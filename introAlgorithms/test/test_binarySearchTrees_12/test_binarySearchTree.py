@@ -9,7 +9,7 @@ logging.basicConfig(filename="log/test_binarySearchTree", level=logging.DEBUG)
 
 
 @pytest.mark.skip
-def test_inode_tree_walk():
+def test_inorder_tree_walk():
     nodes = [linkedlist.Node(i) for i in range(1,11)]
     root = nodes[4]
     root.set_relative(1, nodes[1])
@@ -25,7 +25,7 @@ def test_inode_tree_walk():
 
     tree = BinarySearchTree(root)
 
-    result = tree.inode_tree_walk()
+    result = tree.inorder_tree_walk()
 
     exp_result = [1,2,4,5,7,8]
     for i,j in zip(result, exp_result):
@@ -33,7 +33,7 @@ def test_inode_tree_walk():
 
 
 @pytest.mark.skip
-def test_inode_tree_walk2():
+def test_inorder_tree_walk2():
     nodes = [linkedlist.Node(i) for i in range(1,11)]
     root = nodes[4]
     root.set_relative(1, nodes[1])
@@ -49,7 +49,7 @@ def test_inode_tree_walk2():
 
     tree = BinarySearchTree(root)
 
-    result = tree.inode_tree_walk2()
+    result = tree.inorder_tree_walk2()
     exp_result = [1,2,4,5,7,8]
 
     for i,j in zip(result, exp_result):
@@ -83,7 +83,7 @@ def test_insert():
     assert nodes[6].get_left().key == nodes[5].key
 
     exp_result = [1,2,4,5,6,7,8]
-    result = tree2.inode_tree_walk2()
+    result = tree2.inorder_tree_walk2()
 
     for i,j in zip(result, exp_result):
         assert i == j
