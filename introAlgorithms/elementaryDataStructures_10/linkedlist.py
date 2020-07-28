@@ -1,3 +1,9 @@
+import logging
+
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
+
 class Node():
     def __init__(self, key=None, left=None, right=None, parent=None):
         self.key = key
@@ -10,25 +16,27 @@ class Node():
         self.key = key
 
 
-    def set_relative(self, id, obj):
+    def set_relative(self, id, x):
         if id == 1: 
-            self.left = obj
+            self.left = x
         elif id == 2:
-            self.right = obj
+            self.right = x
         else:
-            self.parent = obj
+            self.parent = x
 
 
-    def set_left(self, obj):
-        self.left = obj
+    def set_left(self, x):
+        self.left = x
+        x.set_parent(self)
 
 
-    def set_right(self, obj):
-        self.right = obj
+    def set_right(self, x):
+        self.right = x
+        x.set_parent(self)
 
 
-    def set_parent(self, obj):
-        self.parent = obj
+    def set_parent(self, x):
+        self.parent = x
 
 
     def rm_relative(self, id):
