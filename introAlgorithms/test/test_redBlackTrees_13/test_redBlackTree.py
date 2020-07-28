@@ -385,12 +385,12 @@ def test_RedBlackTree_insert():
 	tree[5].set_left(tree[4])
 	tree[4].set_red()
 	tree[6].set_red()
+	tree[7].set_red()
 
 	rb = RedBlackTree(root)
-	keys = rb.inode_tree_walk()
+	keys = rb.inorder_tree_walk()
 
-	expected_keys = [1,2,4,5,6]
-	logging.debug("keys: {}".format(keys))
+	expected_keys = [1,2,4,5,6,7,8]
 
 	assert len(expected_keys) == len(keys)
 	for i,j in zip(keys, expected_keys):
@@ -400,16 +400,16 @@ def test_RedBlackTree_insert():
 
 	assert rb.root_node.equal_to(tree[5])
 	assert rb.root_node.has_left_as(tree[2])
-	assert rb.root_node.has_left_as(tree[7])
-	assert rb.root_node.is_black() and tree[2].is_red() and tree[7].is_red()
+	assert rb.root_node.has_right_as(tree[7])
+	assert rb.root_node.is_black() and tree[2].is_red() and tree[7].is_red() and tree[3].is_red()
 	assert tree[2].has_left_as(tree[1])
 	assert tree[2].has_right_as(tree[4])
 	assert tree[4].has_left_as(tree[3])
-	assert tree[7].has_left_as(tree[6])
 	assert tree[7].has_right_as(tree[8])
+	assert tree[7].has_left_as(tree[6])
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_inorder_tree_walk():
     tree = [Node(i) for i in range(10)]
     root = tree[5]
