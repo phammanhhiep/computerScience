@@ -159,11 +159,37 @@ class RedBlackTree(BinarySearchTree):
 
         x = node    
         while node.get_key() is not None:
-            logging.debug("Node({}) is checking".format(node.get_key()))
             x = node
             node = node.get_left()
         logging.debug("Minimum node ({})".format(x.get_key()))
         return x
+
+
+    def get_successor(self, node):
+        """
+        Assume keys are distinct. To handle non-distinct keys, the function need
+        someway to compare two nodes. 
+        """ 
+        if node.has_right():
+            return self.get_minimum(node.get_right())
+        
+        p = node.get_parent()
+
+        while not p.is_nil() and (not p.get_right().is_nil() and p.get_right().equal_to(node)):
+            node = p.get_right()
+            p = p.get_parent()
+        return p
+
+
+    def inorder_tree_walk(self):
+        min_node = self.get_minimum(self.root_node)
+        suc_node = self.get_successor(min_node)
+        a = [min_node.get_key()]
+
+        while not suc_node.is_nil():
+            a.append(suc_node.get_key())
+            suc_node = self.get_successor(suc_node)
+        return a
 
 
     def right_rotate(self, node):
@@ -233,7 +259,25 @@ class RedBlackTree(BinarySearchTree):
         v.set_parent(parent)
 
 
-    def insert(self): pass
+    def insert(self, z):
+        x = self.root_node
+        while not x.is_nil():
+            y = x
+            if z.get_key() < x.get_key():
+                x = x.get_left()
+            else:
+                x = x.get_right()
+        z.set_parent(y)
+
+        if y.is_nil():
+            self.root_node = z
+        elif z.get_key() < y.get_key():
+            y.set_left(z)
+        else:
+            y.set_right(z)
+
+        z.set_red()
+        self.insert_fixup(z)
 
 
     def insert_fixup(self, z):
@@ -312,7 +356,6 @@ class RedBlackTree(BinarySearchTree):
 
         if self.root_node.BLACK == y_original_color:
             self.delete_fixup(x)
-
 
 
     def delete_fixup(self, x):
