@@ -41,7 +41,7 @@ class BinarySearchTree:
         return node
 
 
-    def inode_tree_walk(self):
+    def inorder_tree_walk(self):
         """Return a list of keys in increasing order
         
         The implementation is a nonrecursive version.
@@ -71,7 +71,7 @@ class BinarySearchTree:
         return a
 
 
-    def inode_tree_walk2(self):
+    def inorder_tree_walk2(self):
         min_node = self.get_minimum(self.root_node)
         suc_node = self.get_successor(min_node)
         a = [min_node.get_key()]
