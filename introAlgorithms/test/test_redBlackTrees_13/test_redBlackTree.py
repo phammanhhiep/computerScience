@@ -149,7 +149,6 @@ def test_RedBlackTree_delete_fixup3():
     tree[3].set_parent(tree[5])
     tree[4].set_parent(tree[5])
     
-    
 
     rb = RedBlackTree(root)
     rb.delete_fixup(tree[7])
@@ -216,23 +215,15 @@ def test_RedBlackTree_delete():
     root = tree[6]
     root.set_right(tree[8])
     root.set_left(tree[2])
-    tree[2].set_parent(root)
-    tree[8].set_parent(root)
     tree[2].set_red()
     tree[8].set_red()
     tree[8].set_left(tree[7])
     tree[8].set_right(tree[9])
-    tree[7].set_parent(tree[8])
-    tree[9].set_parent(tree[8])
     tree[2].set_left(tree[1])
-    tree[1].set_parent(tree[2])
-    tree[2].set_right(tree[5])
-    tree[5].set_parent(tree[2])
-    tree[5].set_left(tree[3])
-    tree[5].set_right(tree[4])
-    tree[3].set_parent(tree[5])
-    tree[4].set_parent(tree[5])
-    tree[4].set_red()   
+    tree[2].set_right(tree[4])
+    tree[4].set_left(tree[3])
+    tree[4].set_right(tree[5])
+    tree[5].set_red()   
     tree[3].set_red()
 
     rb = RedBlackTree(root)
@@ -524,6 +515,83 @@ def test_AugmentedRBTree_left_rotate():
     assert arb.root_node.equal_to(tree[6])
     assert tree[6].get_size() == 6
     assert tree[2].get_size() == 5
+
+
+@pytest.mark.skip
+def test_AugmentedRBTree_insert():
+    logging.debug("Insert a node and test insert_fixup case 2 and 3")
+    tree = [AugmentedNode(i) for i in range(10)] 
+    root = tree[2]
+    root.set_left(tree[1])
+    root.set_right(tree[7])
+    tree[7].set_right(tree[8])
+    tree[7].set_left(tree[5])
+    tree[5].set_right(tree[6])
+    tree[5].set_left(tree[4])
+    tree[4].set_red()
+    tree[6].set_red()
+    tree[7].set_red()
+
+    arb = AugmentedRBTree(root)
+    keys = arb.inorder_tree_walk()
+
+    expected_keys = [1,2,4,5,6,7,8]
+
+    assert len(expected_keys) == len(keys)
+    for i,j in zip(keys, expected_keys):
+        assert i == j
+
+    arb.insert(tree[3])
+
+    assert arb.root_node.equal_to(tree[5])
+    assert arb.root_node.has_left_as(tree[2])
+    assert arb.root_node.has_right_as(tree[7])
+    assert arb.root_node.is_black()
+    assert tree[2].is_red()
+    assert tree[7].is_red()
+    assert tree[3].is_red()
+    assert tree[2].has_left_as(tree[1])
+    assert tree[2].has_right_as(tree[4])
+    assert tree[4].has_left_as(tree[3])
+    assert tree[7].has_right_as(tree[8])
+    assert tree[7].has_left_as(tree[6])
+
+    assert arb.root_node.get_size() == 8
+    assert tree[2].get_size() == 4
+    assert tree[7].get_size() == 3
+
+
+# @pytest.mark.skip
+def test_AugmentedRBTree_delete():
+    tree = [AugmentedNode(i) for i in range(10)]
+    root = tree[6]
+    root.set_right(tree[8])
+    root.set_left(tree[2])
+    tree[2].set_red()
+    tree[8].set_red()
+    tree[8].set_left(tree[7])
+    tree[8].set_right(tree[9])
+    tree[2].set_left(tree[1])
+    tree[2].set_right(tree[4])
+    tree[4].set_left(tree[3])
+    tree[4].set_right(tree[5])
+    tree[5].set_red()   
+    tree[3].set_red()
+
+    arb = AugmentedRBTree(root)
+    arb.delete(tree[8])
+
+    assert arb.root_node.equal_to(tree[6])
+    assert arb.root_node.has_left_as(tree[2])
+    assert arb.root_node.has_right_as(tree[9])
+    assert tree[9].has_left_as(tree[7])
+    assert not tree[9].has_right()
+    assert tree[9].is_black()
+    assert tree[7].is_red()
+    assert tree[7].has_parent_as(tree[9])
+
+    assert tree[6].get_size() == 8
+    assert tree[9].get_size() == 2
 
 
 @pytest.mark.skip
