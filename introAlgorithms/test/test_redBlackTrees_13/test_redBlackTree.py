@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from redBlackTrees_13.redBlackTree import RedBlackTree, Node, NilNode
+from redBlackTrees_13.redBlackTree import RedBlackTree, Node, NilNode, AugmentedRBTree, AugmentedNode
 
 
 @pytest.fixture
@@ -427,6 +427,48 @@ def test_inorder_tree_walk():
     expected_keys = [1,2,4,5,7,8]
     for i,j in zip(keys, expected_keys):
         assert i == j
+
+
+@pytest.mark.skip
+def test_select_by_rank():
+	tree = [AugmentedNode(i) for i in range(10)]
+	root = tree[2]
+	root.set_size(6)
+	root.set_left(tree[1])
+	root.set_right(tree[6])
+	tree[6].set_size(4)
+	tree[6].set_left(tree[5])
+	tree[5].set_size(3)
+	tree[5].set_left(tree[3])
+	tree[3].set_size(2)
+	tree[3].set_right(tree[4])
+
+	arb = AugmentedRBTree(root)
+	node = arb.select_by_rank(3)
+
+	assert node.equal_to(tree[3])
+
+
+@pytest.mark.skip
+def test_get_rank():
+	tree = [AugmentedNode(i) for i in range(10)]
+	root = tree[2]
+	root.set_size(6)
+	root.set_left(tree[1])
+	root.set_right(tree[6])
+	tree[6].set_size(4)
+	tree[6].set_left(tree[5])
+	tree[5].set_size(3)
+	tree[5].set_left(tree[3])
+	tree[3].set_size(2)
+	tree[3].set_right(tree[4])
+
+	arb = AugmentedRBTree(root)
+	rank = arb.get_rank(tree[5])
+	expected_rank = 5
+
+	assert rank == expected_rank
+
 
 
 @pytest.mark.skip
