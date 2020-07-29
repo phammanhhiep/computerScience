@@ -7,6 +7,11 @@ logging.basicConfig(filename="binarySearchTree.log", level=logging.DEBUG)
 
 
 class BinarySearchTree:
+    """[summary]
+    
+    Assumptions,
+    - Keys are distinct
+    """
     def __init__(self, root_node=None):
         """
         Assume the tree has the binary-search-tree property at the beginning. 
