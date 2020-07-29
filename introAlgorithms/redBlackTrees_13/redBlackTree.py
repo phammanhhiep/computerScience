@@ -74,13 +74,13 @@ class Node(NilNode):
     """
     def __init__(self, key, color=None, left=None, right=None, parent=None):
         NilNode.__init__(self, key, left, right, parent)
-        if self.left is None:
-            self.left = NilNode()
-        if self.right is None:
-            self.right = NilNode()
-        if self.parent is None:
-            self.parent = NilNode() 
-        self.color = color if color is not None else self.BLACK
+        if self.get_left() is None:
+            self.set_left(NilNode())
+        if self.get_right() is None:
+            self.set_right(NilNode())
+        if self.get_parent() is None:
+            self.set_parent(NilNode()) 
+        self.color = color if color is not None else self.color
 
 
     def set_red(self):
@@ -121,10 +121,52 @@ class Node(NilNode):
             return False       
 
 
+class AugmentedNilNode(NilNode):
+    def __init__(self, key=None, left=None, right=None, parent=None):
+        NilNode.__init__(self, key, left, right, parent)
+        self.size = 0
+
+
+    def get_size(self):
+        return self.size
+
+
+    def set_size(self, n):
+        self.size = n
+
+
+class AugmentedNode(Node):
+    """A node with additional attributes
+    
+    [description]
+    
+    Extends:
+        Node
+    """
+    def __init__(self, key, color=None, left=None, right=None, parent=None, size=1):
+        Node.__init__(self, key, color, left, right, parent)
+        self.size = size
+        if self.get_left().is_nil():
+            self.set_left(AugmentedNilNode())
+        if self.get_right().is_nil():
+            self.set_right(AugmentedNilNode())
+        if self.get_parent().is_nil():
+            self.set_parent(AugmentedNilNode())
+
+
+    def get_size(self):
+        return self.size
+
+
+    def set_size(self, n):
+        self.size = n
+
+
 class RedBlackTree(BinarySearchTree):
     """[summary]
     
-    Assuming keys are distinct.
+    Assumptions,
+    - Keys are distinct
     
     Extends:
         BinarySearchTree
@@ -417,4 +459,101 @@ class RedBlackTree(BinarySearchTree):
                     self.right_rotate(xp)
                     x = self.root_node
         x.set_black()
+
+
+class AugmentedRBTree(RedBlackTree):
+    def __init__(self, root_node=None):
+        RedBlackTree.__init__(self, root_node)
+        self.maintain_size()
+
+
+    def maintain_size(self, x=None):
+        """Maintain the size of a subtree whose root is the given node
+        
+        [description]
+        
+        Keyword Arguments:
+            x {[type]} -- [description] (default: {None})
+        """ 
+
+
+    def select_by_rank(self, i, x=None):
+        """Return a node with rank within the tree rooted at x 
+        
+        [description]
+        
+        Arguments:
+            i {[type]} -- [description]
+        
+        Keyword Arguments:
+            x {[type]} -- [description] (default: {None})
+        """
+        if x is None:
+            x = self.root_node
+        r = x.get_left().get_size() + 1
+        if i == r:
+            return x
+        elif i < r:
+            return self.select_by_rank(i, x.get_left())
+        else:
+            return self.select_by_rank(i-r, x.get_right())
+
+
+    def get_rank(self, x):
+        """Return rank of a node
+        
+        [description]
+        
+        Arguments:
+            x {[type]} -- [description]
+        """ 
+        r = x.get_left().get_size() + 1
+        y = x
+
+        while not y.equal_to(self.root_node):
+            yp = y.get_parent()
+            if yp.has_right_as(y):
+                r = r + yp.get_left().get_size() + 1
+            y = yp
+        return r
+
+
+    def right_rotate(self, x):
+        """Rotate and update ranks
+        
+        [description]
+        
+        Arguments:
+            x {[type]} -- [description]
+        """ 
+
+
+    def left_rotate(self, x):
+        """Rotate and update ranks
+        
+        [description]
+        
+        Arguments:
+            x {[type]} -- [description]
+        """ 
+
+    def insert(self, x):
+        """Insert a node and also update ranks
+        
+        [description]
+        
+        Arguments:
+            x {[type]} -- [description]
+        """ 
+
+
+    def delete(self, x):
+        """Delete a node and update ranks
+        
+        [description]
+        
+        Arguments:
+            x {[type]} -- [description]
+        """ 
+
 
