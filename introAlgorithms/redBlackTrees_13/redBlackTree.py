@@ -475,6 +475,16 @@ class AugmentedRBTree(RedBlackTree):
         Keyword Arguments:
             x {[type]} -- [description] (default: {None})
         """ 
+        if x is None:
+            x = self.root_node
+        if x.is_nil():
+            return x.get_size()
+        else:
+            ls = self.maintain_size(x.get_left())
+            rs = self.maintain_size(x.get_right())
+            s = ls + rs + 1
+            x.set_size(s)
+            return s
 
 
     def select_by_rank(self, i, x=None):
@@ -526,6 +536,14 @@ class AugmentedRBTree(RedBlackTree):
         Arguments:
             x {[type]} -- [description]
         """ 
+        left = x.get_left()
+        ori_size = x.get_size()
+        rb = RedBlackTree(self.root_node)
+        rb.right_rotate(x)
+        if rb.root_node.equal_to(left):
+            self.root_node = left
+        left.set_size(ori_size)
+        x.set_size(x.get_left().get_size() + x.get_right().get_size() + 1)
 
 
     def left_rotate(self, x):
@@ -536,6 +554,15 @@ class AugmentedRBTree(RedBlackTree):
         Arguments:
             x {[type]} -- [description]
         """ 
+        right = x.get_right()
+        ori_size = x.get_size()
+        rb = RedBlackTree(self.root_node)
+        rb.left_rotate(x)
+        if rb.root_node.equal_to(right):
+            self.root_node = right
+        right.set_size(ori_size)
+        x.set_size(x.get_left().get_size() + x.get_right().get_size() + 1)
+
 
     def insert(self, x):
         """Insert a node and also update ranks
