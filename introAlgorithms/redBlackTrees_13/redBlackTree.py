@@ -223,14 +223,20 @@ class RedBlackTree(BinarySearchTree):
         return p
 
 
-    def inorder_tree_walk(self):
+    def inorder_tree_walk(self, color=False):
         min_node = self.get_minimum(self.root_node)
         suc_node = self.get_successor(min_node)
-        a = [min_node.get_key()]
+        if color is True:
+            a = [(min_node.get_key(), min_node.get_color())]
+        else:
+            a = [min_node.get_key()]
 
         while not suc_node.is_nil():
             logging.debug("suc_node: {}".format(suc_node.get_key()))
-            a.append(suc_node.get_key())
+            if color is True:
+                a.append((suc_node.get_key(), suc_node.get_color()))
+            else:
+                a.append(suc_node.get_key())
             suc_node = self.get_successor(suc_node)
         return a
 
@@ -241,6 +247,7 @@ class RedBlackTree(BinarySearchTree):
             raise ValueError()
 
         left = node.get_left()
+        logging.debug("Right rotate node({}) and node({})".format(node.get_key(), left.get_key()))
         left.set_parent(node.get_parent())
 
         if not node.has_parent():
@@ -264,6 +271,7 @@ class RedBlackTree(BinarySearchTree):
             raise ValueError()
 
         right = node.get_right()
+        logging.debug("Left rotate node({}) and node({})".format(node.get_key(), right.get_key()))
         right.set_parent(node.get_parent())
 
         if not node.has_parent():
@@ -463,6 +471,8 @@ class RedBlackTree(BinarySearchTree):
 
 class AugmentedRBTree(RedBlackTree):
     def __init__(self, root_node=None):
+        if root_node is None:
+            root_node = AugmentedNilNode()
         RedBlackTree.__init__(self, root_node)
         self.maintain_size()
 
@@ -529,7 +539,7 @@ class AugmentedRBTree(RedBlackTree):
 
 
     def right_rotate(self, x):
-        """Rotate and update ranks
+        """Rotate and update sizes
         
         [description]
         
@@ -538,7 +548,11 @@ class AugmentedRBTree(RedBlackTree):
         """ 
         left = x.get_left()
         ori_size = x.get_size()
+        root_original_color = self.root_node.get_color()
+
         rb = RedBlackTree(self.root_node)
+        rb.root_node.set_color(root_original_color)
+
         rb.right_rotate(x)
         if rb.root_node.equal_to(left):
             self.root_node = left
@@ -547,16 +561,21 @@ class AugmentedRBTree(RedBlackTree):
 
 
     def left_rotate(self, x):
-        """Rotate and update ranks
+        """Left rotate and update sizes
         
-        [description]
+        The creation of a red-black tree could reset root color, which may be not desired when the method is called in the insert method. That is why we need to keep the orginal color of the root and set it after the creation.
         
         Arguments:
             x {[type]} -- [description]
         """ 
+
         right = x.get_right()
         ori_size = x.get_size()
+        root_original_color = self.root_node.get_color()
+
         rb = RedBlackTree(self.root_node)
+        rb.root_node.set_color(root_original_color)
+
         rb.left_rotate(x)
         if rb.root_node.equal_to(right):
             self.root_node = right
@@ -564,23 +583,77 @@ class AugmentedRBTree(RedBlackTree):
         x.set_size(x.get_left().get_size() + x.get_right().get_size() + 1)
 
 
-    def insert(self, x):
+    def insert(self, z):
         """Insert a node and also update ranks
         
         [description]
         
         Arguments:
-            x {[type]} -- [description]
+            z {[type]} -- [description]
         """ 
+        x = self.root_node
+        y = AugmentedNilNode()
+
+        while not x.is_nil():
+            y = x
+            y.set_size(y.get_size() + 1)
+            if z.get_key() < x.get_key():
+                x = x.get_left()
+            else:
+                x = x.get_right()
+        z.set_parent(y)
+
+        if y.is_nil():
+            self.root_node = z
+        elif z.get_key() < y.get_key():
+            y.set_left(z)
+        else:
+            y.set_right(z)
+
+        z.set_red()
+        logging.debug("Insert node({}) as child of node({})".format(z.get_key(), y.get_key()))
+        self.insert_fixup(z)
 
 
-    def delete(self, x):
-        """Delete a node and update ranks
+    def delete(self, z):
+        """Delete a node and update size
         
         [description]
         
         Arguments:
-            x {[type]} -- [description]
+            z {[type]} -- [description]
         """ 
+        y = z
+        y_original_color = y.get_color()
 
+        if not z.has_left():
+            x = z.get_right()
+            self.transplant(z, x)
+        elif not z.has_right():
+            x = z.get_left()
+            self.transplant(z, x)
+        else:
+            y = self.get_minimum(z.get_right())
+            y_original_color = y.get_color()
+            x = y.get_right()
+            if y.has_parent_as(z):
+                x.set_parent(y)
+            else:
+                self.transplant(y, x)
+                y.set_right(z.get_right())
+                y.get_right().set_parent(y)
+            self.transplant(z, y)
+            y.set_left(z.get_left())
+            y.get_left().set_parent(y)
+            y.set_color(z.get_color())
+            y.set_size(z.get_size())
+
+        k = x    
+        while not k.get_parent().is_nil():
+            kp = k.get_parent()
+            kp.set_size(kp.get_size() - 1)
+            k = kp
+
+        if self.root_node.BLACK == y_original_color:
+            self.delete_fixup(x)
 
